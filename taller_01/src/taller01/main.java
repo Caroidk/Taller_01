@@ -17,6 +17,8 @@ public class main {
 		traducirExt(extraterrestres, cantExt);
 		traducirHum(humanos, cantHum);
 		
+		Menu(humanos, extraterrestres, cantHum, cantExt);
+		
 		//Verificar si la edad de los extraterrestres, altura y peso se guardan en metros y kgs
 		
 	}
@@ -426,4 +428,54 @@ public class main {
 		System.out.println("  —————————————————");
 		System.out.println("-----------------------------------------");
 	}
+	
+	public static void Menu(String[][] hum, String[][] ext, int cantHum, int cantExt) {
+		int op = 0;
+		while(op!=12) {
+			System.out.println("*********** MENÚ ***********");
+			Scanner leer = new Scanner(System.in);
+			System.out.println("1) Ingresar extraterrestre\n2) Modificar un extraterrestre\n3) Ingresar humano\n4) Modificar un humano\n5) Mostrar por nacionalidad\n6) Eliminar extraterrestre\n7) Eliminar humano\n8) Buscar por identificación universal\n9) Mostrar por planeta\n10) Mostrar por nacionalidad y porcentaje\n11) Mostrar cantidad de extraterrestres según tipo\n12) Salir");
+			System.out.print("Su opción: ");
+			op = Integer.parseInt(leer.nextLine());
+			if(op==12) {
+				System.out.println("Saliendo del sistema...");
+			}
+			while(op<1 || op>12) {
+				System.out.print("Opción ingresada no es válida. Ingrese nuevamente: ");
+				op = Integer.parseInt(leer.nextLine());
+			}
+			switch(op) {
+				case 1: 
+					ingresarExt(ext, cantExt);
+					break;
+				case 2:
+					modificarExt(ext, cantExt);
+					break;
+				case 3:
+					break;
+				case 4:
+					break;
+				case 5:
+					desplegarNacionalidad(hum, cantHum);
+					break;
+				case 6:
+					eliminarExt(ext, cantExt);
+					break;
+				case 7:
+					break;
+				case 8:
+					buscarExt(ext, cantExt);
+					break;
+				case 9:
+					break;
+				case 10:
+					desplegarPorNacionalidad(hum, cantHum);
+					break;
+				case 11:
+					desplegarTipoExt(ext, cantExt);
+					break;
+			}
+		}
+	}
+	
 }
