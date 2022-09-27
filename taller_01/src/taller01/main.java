@@ -171,14 +171,18 @@ public class main {
 	}
 	
 	public static void desplegarExt(String[][] ext, int cantExt) {
-		for(int i=0; i<cantExt; i++) {
-			System.out.println("Extraterrestre "+(i+1)+": "+"[Especie: "+ext[i][0]+", Nombre: "+ext[i][1]+", Identificación universal: "+ext[i][2]+", Planeta de origen: "+ext[i][3]+", Edad: "+ext[i][4]+", Altura: "+ext[i][5]+", Peso: "+ext[i][6]+", Tipo: "+ext[i][7]+"]");
+		for(int i=0; i<ext.length; i++) {
+			if(ext[i][0]!=null) {
+				System.out.println("Extraterrestre "+(i+1)+": "+"[Especie: "+ext[i][0]+", Nombre: "+ext[i][1]+", Identificación universal: "+ext[i][2]+", Planeta de origen: "+ext[i][3]+", Edad: "+ext[i][4]+", Altura: "+ext[i][5]+", Peso: "+ext[i][6]+", Tipo: "+ext[i][7]+"]");
+			}
 		}
 	}
 	
 	public static void desplegarHum(String[][] hum, int cantHum) {
-		for(int i=0; i<cantHum; i++) {
-			System.out.println("Humano "+(i+1)+": "+"[Nacionalidad: "+hum[i][0]+", Nombre: "+hum[i][1]+", Identificación: "+hum[i][2]+", Región: "+hum[i][3]+", Ciudad: "+hum[i][4]+", Edad: "+hum[i][5]+", Altura: "+hum[i][6]+", Peso: "+hum[i][7]+", Planetas de trabajo: "+hum[i][8]+"]");
+		for(int i=0; i<hum.length; i++) {
+			if(hum[i][0]!=null) {
+				System.out.println("Humano "+(i+1)+": "+"[Nacionalidad: "+hum[i][0]+", Nombre: "+hum[i][1]+", Identificación: "+hum[i][2]+", Región: "+hum[i][3]+", Ciudad: "+hum[i][4]+", Edad: "+hum[i][5]+", Altura: "+hum[i][6]+", Peso: "+hum[i][7]+", Planetas de trabajo: "+hum[i][8]+"]");
+			}
 		}
 	}
 	
@@ -488,7 +492,7 @@ public class main {
 		System.out.println("  —————————————————");
 		System.out.println("-----------------------------------------");
 	}
-	//ARREGLAR MOSTRAR OP, EN DESPLEGAR CANTHUM=2 PERO AL ELIMINAR CANTHUM=1
+	
 	public static void Menu(String[][] hum, String[][] ext, int cantHum, int cantExt) {
 		int op = 0;
 		while(op!=12) {
