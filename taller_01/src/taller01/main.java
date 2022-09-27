@@ -20,7 +20,7 @@ public class main {
 		Menu(humanos, extraterrestres, cantHum, cantExt);
 		
 		//Verificar si la edad de los extraterrestres, altura y peso se guardan en metros y kgs
-		
+		//Verificar si la id es con random o ingresa desde pantalla, además de cómo se modifica (random o manual)
 	}
 
 	public static int leerArchivoExt(String[][] ext) throws IOException{
@@ -123,7 +123,7 @@ public class main {
 		return datos;
 	}
 	
-	//1
+	//1 ARREGLAR, NO GUARDA
 	public static void ingresarExt(String[][] ext, int cantExt) {
 		System.out.println("-- INGRESAR EXTRATERRESTRE --");
 		Scanner leerExt = new Scanner(System.in);
@@ -134,12 +134,10 @@ public class main {
 		Random ran = new Random();
 		int id = ran.nextInt(10000000)+99999999;
 		int i=0;
-		while(i<ext.length) {
-			if(ext[i][0]!=null) {
-				if(ext[i][2].equals(Integer.toString(id))) {
-					id = ran.nextInt(10000000)+99999999;
-					i = 0;
-				}
+		while(i<cantExt) {
+			if(ext[i][2].equals(Integer.toString(id))) {
+				id = ran.nextInt(10000000)+99999999;
+				i = 0;
 			}
 			i++;
 		}
@@ -168,6 +166,7 @@ public class main {
 		ext[cantExt][7] = tipo;
 		cantExt++;
 		System.out.println("Extraterrestre ingresado exitosamente.");
+		System.out.println(ext[cantExt][0]+" - "+ext[cantExt][2]);
 		System.out.println("-----------------------------------------");
 	}
 	
@@ -249,11 +248,49 @@ public class main {
 		System.out.println("-----------------------------------------");
 	}
 	
-	//3
-	//Terminar ingresar humano
+	//3 ARREGLAR, NO GUARDA
 	public static void ingresarHum(String[][] hum, int cantHum) {
 		System.out.println("-- INGRESAR HUMANO --");
 		Scanner leerHum = new Scanner(System.in);
+		System.out.print("- Ingrese nacionalidad: ");
+		String nacion = leerHum.nextLine();
+		System.out.print("- Ingrese nombre: ");
+		String nombre = leerHum.nextLine();
+		Random ran = new Random();
+		int id = ran.nextInt(10000000)+99999999;
+		int i=0;
+		while(i<cantHum) {
+			if(hum[i][2].equals(Integer.toString(id))) {
+				id = ran.nextInt(10000000)+99999999;
+				i = 0;
+			}
+			i++;
+		}
+		System.out.print("- Ingrese región: ");
+		String region = leerHum.nextLine();
+		System.out.print("- Ingrese ciudad: ");
+		String ciudad = leerHum.nextLine();
+		System.out.print("- Ingrese edad: ");
+		int edad = Integer.parseInt(leerHum.nextLine());
+		System.out.print("- Ingrese altura: ");
+		int altura = Integer.parseInt(leerHum.nextLine());
+		System.out.print("- Ingrese peso: ");
+		int peso = Integer.parseInt(leerHum.nextLine());
+		System.out.print("- Ingrese planetas de trabajo (formato PLANETA1/PLANETA2/ETC): ");
+		String trabajo = leerHum.nextLine().toUpperCase();
+		String[] datos = convertirDatos(edad, altura, peso, 2);
+		hum[cantHum][0] = nacion;
+		hum[cantHum][1] = nombre;
+		hum[cantHum][2] = Integer.toString(id);
+		hum[cantHum][3] = region;
+		hum[cantHum][4] = ciudad;
+		hum[cantHum][5] = Integer.toString(edad);
+		hum[cantHum][6] = datos[0];
+		hum[cantHum][7] = datos[1];
+		hum[cantHum][8] = trabajo;
+		cantHum++;
+		System.out.println("Humano ingresado exitosamente.");
+		System.out.println("-----------------------------------------");
 	}
 	
 	//4
@@ -302,7 +339,30 @@ public class main {
 	}
 	
 	//7
-	//Falta eliminar humano
+	public static void eliminarHum(String[][] hum, int cantHum) {
+		System.out.println("-- ELIMINAR HUMANO --");
+		Scanner deleteHum = new Scanner(System.in);
+		System.out.print("- Ingrese número de identificación: ");
+		String id = deleteHum.nextLine();
+		System.out.println(cantHum);
+		int i;
+		for(i=0; i<cantHum; i++){
+			if(hum[i][2].equals(id)) {
+				break;
+			}
+		}
+		if(i==cantHum) {
+			System.out.println("No hay humanos que coincidan con la identificación ingresada.");
+		}else {
+			for(int j=i; j<cantHum;j++) {
+				hum[j] = hum[j+1];
+			}
+			System.out.println("Humano eliminado exitosamente.");
+			cantHum--;
+			System.out.println(cantHum);
+		}
+		System.out.println("-----------------------------------------");
+	}
 	
 	//8
 	public static void buscarExt(String[][] ext, int cantExt) {
@@ -428,7 +488,7 @@ public class main {
 		System.out.println("  —————————————————");
 		System.out.println("-----------------------------------------");
 	}
-	
+	//ARREGLAR MOSTRAR OP, EN DESPLEGAR CANTHUM=2 PERO AL ELIMINAR CANTHUM=1
 	public static void Menu(String[][] hum, String[][] ext, int cantHum, int cantExt) {
 		int op = 0;
 		while(op!=12) {
@@ -452,8 +512,10 @@ public class main {
 					modificarExt(ext, cantExt);
 					break;
 				case 3:
+					ingresarHum(hum, cantHum);
 					break;
 				case 4:
+					desplegarHum(hum, cantHum);
 					break;
 				case 5:
 					desplegarNacionalidad(hum, cantHum);
@@ -462,6 +524,7 @@ public class main {
 					eliminarExt(ext, cantExt);
 					break;
 				case 7:
+					eliminarHum(hum, cantHum);
 					break;
 				case 8:
 					buscarExt(ext, cantExt);
