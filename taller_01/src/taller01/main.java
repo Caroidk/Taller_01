@@ -1,6 +1,8 @@
 package taller01;
 
 import java.util.*;
+import java.util.Scanner;
+
 import java.io.*;
 
 public class main {
@@ -88,6 +90,7 @@ public class main {
 			ext[i][6] = datos[2];
 		}
 	}
+	
 	/***
 	 * Converts the weight and height of humans to kilograms and meters respectively.
 	 * @param hum
@@ -156,7 +159,7 @@ public class main {
 			datos[0] = Double.toString(edad/2);
 			datos[1] = Double.toString(altura/100);
 			datos[2] = Double.toString(peso/1000);
-		}else if(op==2) {
+		}if(op==2) {
 			datos[0] = Double.toString(altura/100);
 			datos[1] = Double.toString(peso/1000);
 		}else if(op==3) {
@@ -166,6 +169,14 @@ public class main {
 		}else if(op==4) {
 			datos[0] = Double.toString(altura*100);
 			datos[1] = Double.toString(peso*1000);
+		}
+		
+		//Para convertirlos al reves
+		
+		if(op == 3) {
+			datos[0] = Double.toString(edad * 2);
+			datos[1] = Double.toString(altura * 100);
+			datos[2] = Double.toString(peso * 1000);
 		}
 		return datos;
 	}
@@ -199,7 +210,7 @@ public class main {
 		String altura = leerExt.nextLine();
 		System.out.print("- Ingrese peso (en gramos): ");
 		String peso = leerExt.nextLine();
-		System.out.print("- Ingrese tipo de estraterrestre (Invertebrado: I, Vertebrado: V, Flexible: F): ");
+		System.out.print("- Ingrese tipo de extraterrestre (Invertebrado: I, Vertebrado: V, Flexible: F): ");
 		String tipo = leerExt.nextLine().toUpperCase();
 		while(!tipo.equals("V") && !tipo.equals("I") && !tipo.equals("F")) {
 			System.out.print("Tipo ingresado no es válido. Ingrese nuevamente: ");
@@ -433,6 +444,7 @@ public class main {
 	 * @param cantHum
 	 */
 	public static void desplegarNacionalidad(String[][] hum, int cantHum) {
+		cantHum = getCantHum(hum);
 		System.out.println("-- MOSTRAR POR NACIONALIDAD --");
 		Scanner leerNac = new Scanner(System.in);
 		System.out.print("- Ingrese nacionalidad: ");
@@ -480,6 +492,7 @@ public class main {
 	 * @param cantHum
 	 */
 	public static void eliminarHum(String[][] hum, int cantHum) {
+		cantHum = getCantHum(hum);
 		System.out.println("-- ELIMINAR HUMANO --");
 		Scanner deleteHum = new Scanner(System.in);
 		System.out.print("- Ingrese número de identificación: ");
@@ -537,7 +550,6 @@ public class main {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("-Ingrese nombre del planeta a consultar: ");
 		String planeta = scan.nextLine().toUpperCase();
-		printMatriz(ext);
 		
 		double cantExtPorPlaneta = extraterrestresPorPlaneta(planeta, ext);
 		
@@ -602,6 +614,7 @@ public class main {
 	 * @param cantHum
 	 */
 	public static void desplegarPorNacionalidad(String[][] hum, int cantHum) {
+		cantHum = getCantHum(hum);
 		System.out.println("-- MOSTRAR POR NACIONALIDAD --");
 		Scanner leerNacion = new Scanner(System.in);
 		System.out.print("- Ingrese nacionalidad: ");
@@ -746,7 +759,7 @@ public class main {
 	 * @param ext
 	 * @return
 	 */
-	public static int Menu(String[][] hum, String[][] ext) {
+	public static int Menu(String[][] hum, String[][] ext){
 		int op = 0;
 		while(op!=12) {
 			System.out.println("*********** MENÚ ***********");
