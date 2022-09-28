@@ -125,6 +125,7 @@ public class main {
 	
 	//1 
 	public static void ingresarExt(String[][] ext, int cantExt) {
+		cantExt = getCantExt(ext);
 		System.out.println("-- INGRESAR EXTRATERRESTRE --");
 		Scanner leerExt = new Scanner(System.in);
 		System.out.print("- Ingrese especie: ");
@@ -164,13 +165,14 @@ public class main {
 		ext[cantExt][5] = datos[1];
 		ext[cantExt][6] = datos[2];
 		ext[cantExt][7] = tipo;
-		cantExt++;
 		System.out.println("Extraterrestre ingresado exitosamente.");
 		System.out.println(ext[cantExt][0]+" - "+ext[cantExt][2]);
+		cantExt++;
 		System.out.println("-----------------------------------------");
 	}
 	
 	public static void desplegarExt(String[][] ext, int cantExt) {
+		cantExt = getCantExt(ext);
 		for(int i=0; i<ext.length; i++) {
 			if(ext[i][0]!=null) {
 				System.out.println("Extraterrestre "+(i+1)+": "+"[Especie: "+ext[i][0]+", Nombre: "+ext[i][1]+", Identificación universal: "+ext[i][2]+", Planeta de origen: "+ext[i][3]+", Edad: "+ext[i][4]+", Altura: "+ext[i][5]+", Peso: "+ext[i][6]+", Tipo: "+ext[i][7]+"]");
@@ -188,6 +190,7 @@ public class main {
 	
 	//2
 	public static void modificarExt(String[][] ext, int cantExt) {
+		cantExt = getCantExt(ext);
 		System.out.println("-- MODIFICAR EXTRATERRESTRE --");
 		desplegarExt(ext, cantExt);
 		Scanner leerExt1 = new Scanner(System.in);
@@ -320,6 +323,7 @@ public class main {
 	
 	//6
 	public static void eliminarExt(String[][] ext, int cantExt) {
+		cantExt = getCantExt(ext);
 		System.out.println("-- ELIMINAR EXTRATERRESTRE --");
 		Scanner deleteExt = new Scanner(System.in);
 		System.out.print("- Ingrese número de identificación universal: ");
@@ -370,6 +374,7 @@ public class main {
 	
 	//8
 	public static void buscarExt(String[][] ext, int cantExt) {
+		cantExt = getCantExt(ext);
 		System.out.println("-- BUSCAR POR IDENTIFICACIÓN UNIVERSAL --");
 		Scanner buscarExt = new Scanner(System.in);
 		System.out.print("- Ingrese número de indentificación universal: ");
@@ -390,6 +395,7 @@ public class main {
 	
 	//9
 	public static void mostrarPlaneta(String [][] ext, String [][] hum, int cantExt) {
+		cantExt = getCantExt(ext);
 		System.out.println("-- MOSTRAR POR PLANETA --");
 		Scanner scan = new Scanner(System.in);
 		System.out.println("-Ingrese nombre del planeta a consultar: ");
@@ -467,6 +473,7 @@ public class main {
 	}
 	
 	public static void contarTipos(String[][] ext, int cantExt, int[] cant) {
+		cantExt = getCantExt(ext);
 		for(int i=0; i<cantExt; i++) {
 			switch(ext[i][7]) {
 				case "I":
@@ -484,6 +491,7 @@ public class main {
 	
 	//11
 	public static void desplegarTipoExt(String[][] ext, int cantExt) {
+		cantExt = getCantExt(ext);
 		System.out.println("-- MOSTRAR EXTRATERRESTRES SEGÚN TIPO --");
 		int[] cantTipos = new int[3];
 		contarTipos(ext, cantExt, cantTipos);
@@ -547,6 +555,7 @@ public class main {
 	}
 	
 	public static void Menu(String[][] hum, String[][] ext, int cantHum, int cantExt) {
+		cantExt = getCantExt(ext);
 		int op = 0;
 		while(op!=12) {
 			System.out.println("*********** MENÚ ***********");
