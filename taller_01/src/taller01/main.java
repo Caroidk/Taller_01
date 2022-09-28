@@ -2,6 +2,8 @@ package taller01;
 
 import java.util.Random;
 import java.util.Scanner;
+
+
 import java.io.*;
 
 public class main {
@@ -65,6 +67,7 @@ public class main {
 	}
 	
 	public static void traducirExt(String[][] ext, int cantExt) {
+		cantExt = getCantExt(ext);
 		for(int i=0; i<cantExt; i++) {
 			ext[i][0] = traducir(ext[i][0]);
 			ext[i][1] = traducir(ext[i][1]);
@@ -77,6 +80,7 @@ public class main {
 	}
 	
 	public static void traducirHum(String[][] hum, int cantHum) {
+		cantHum = getCantHum(hum);
 		for(int i=0; i<cantHum; i++) {
 			String[] datos = convertirDatos(Double.parseDouble(hum[i][5]), Double.parseDouble(hum[i][6]), Double.parseDouble(hum[i][7]), 2);
 			hum[i][6] = datos[0];
@@ -116,9 +120,17 @@ public class main {
 			datos[0] = Double.toString(edad/2);
 			datos[1] = Double.toString(altura/100);
 			datos[2] = Double.toString(peso/1000);
-		}else if(op==2) {
+		}if(op==2) {
 			datos[0] = Double.toString(altura/100);
 			datos[1] = Double.toString(peso/1000);
+		}
+		
+		//Para convertirlos al reves
+		
+		if(op == 3) {
+			datos[0] = Double.toString(edad * 2);
+			datos[1] = Double.toString(altura * 100);
+			datos[2] = Double.toString(peso * 1000);
 		}
 		return datos;
 	}
@@ -150,7 +162,7 @@ public class main {
 		String altura = leerExt.nextLine();
 		System.out.print("- Ingrese peso (en gramos): ");
 		String peso = leerExt.nextLine();
-		System.out.print("- Ingrese tipo de estraterrestre (Invertebrado: I, Vertebrado: V, Flexible: F): ");
+		System.out.print("- Ingrese tipo de extraterrestre (Invertebrado: I, Vertebrado: V, Flexible: F): ");
 		String tipo = leerExt.nextLine().toUpperCase();
 		while(!tipo.equals("V") && !tipo.equals("I") && !tipo.equals("F")) {
 			System.out.print("Tipo ingresado no es válido. Ingrese nuevamente: ");
@@ -257,6 +269,7 @@ public class main {
 	
 	//3
 	public static void ingresarHum(String[][] hum, int cantHum) {
+		cantHum = getCantHum(hum);
 		System.out.println("-- INGRESAR HUMANO --");
 		Scanner leerHum = new Scanner(System.in);
 		System.out.print("- Ingrese nacionalidad: ");
@@ -305,6 +318,7 @@ public class main {
 	
 	//5
 	public static void desplegarNacionalidad(String[][] hum, int cantHum) {
+		cantHum = getCantHum(hum);
 		System.out.println("-- MOSTRAR POR NACIONALIDAD --");
 		Scanner leerNac = new Scanner(System.in);
 		System.out.print("- Ingrese nacionalidad: ");
@@ -348,6 +362,7 @@ public class main {
 	
 	//7
 	public static void eliminarHum(String[][] hum, int cantHum) {
+		cantHum = getCantHum(hum);
 		System.out.println("-- ELIMINAR HUMANO --");
 		Scanner deleteHum = new Scanner(System.in);
 		System.out.print("- Ingrese número de identificación: ");
@@ -400,7 +415,6 @@ public class main {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("-Ingrese nombre del planeta a consultar: ");
 		String planeta = scan.nextLine().toUpperCase();
-		printMatriz(ext);
 		
 		double cantExtPorPlaneta = extraterrestresPorPlaneta(planeta, ext);
 		
@@ -452,6 +466,7 @@ public class main {
 
 	//10
 	public static void desplegarPorNacionalidad(String[][] hum, int cantHum) {
+		cantHum = getCantHum(hum);
 		System.out.println("-- MOSTRAR POR NACIONALIDAD --");
 		Scanner leerNacion = new Scanner(System.in);
 		System.out.print("- Ingrese nacionalidad: ");
@@ -554,7 +569,8 @@ public class main {
 		System.out.println("-----------------------------------------");
 	}
 	
-	public static void Menu(String[][] hum, String[][] ext, int cantHum, int cantExt) {
+	public static void Menu(String[][] hum, String[][] ext, int cantHum, int cantExt) throws IOException {
+		cantHum = getCantHum(hum);
 		cantExt = getCantExt(ext);
 		int op = 0;
 		while(op!=12) {
@@ -565,6 +581,7 @@ public class main {
 			op = Integer.parseInt(leer.nextLine());
 			if(op==12) {
 				System.out.println("Saliendo del sistema...");
+				guardarExtraterrestres(ext);
 			}
 			while(op<1 || op>12) {
 				System.out.print("Opción ingresada no es válida. Ingrese nuevamente: ");
@@ -608,7 +625,24 @@ public class main {
 		}
 	}
 	
-	//Extra
+	//Extras
+	
+	public static void guardarExtraterrestres(String [][] ext) throws IOException {
+		
+		FileWriter escribirTxt = new FileWriter("x.txt");
+		
+		for(int i = 0 ; i < getCantExt(ext) ; i++) {
+			String [] datosTraducidos = convertirDatos(Double.parseDouble(ext[i][4]), Double.parseDouble(ext[i][5]), Double.parseDouble(ext[i][6]), 3);
+			String linea = traducir(ext[i][0]) + "," + traducir(ext[i][1]) + "," + ext[i][2] + "," + traducir(ext[i][3]) + "," + datosTraducidos[0] + "," + datosTraducidos[1] + "," + datosTraducidos[2] + "," + ext[i][7];
+			
+			if(i!=0) {
+				escribirTxt.write("\n");
+			}
+			
+			escribirTxt.write(linea);
+		}
+		escribirTxt.close();
+	}
 	
 	public static void printMatriz(String [][] matriz) {
 
@@ -638,6 +672,19 @@ public class main {
 		int cont = 0;
 		for(int fila = 0 ; fila < ext.length ; fila++) {
 			if(ext[fila][0] != null) {	
+				cont++;
+			}
+			else {
+				break;
+			}
+		}
+		return cont;
+	}
+	
+	public static int getCantHum(String [][] hum) {
+		int cont = 0;
+		for(int fila = 0 ; fila < hum.length ; fila++) {
+			if(hum[fila][0] != null) {	
 				cont++;
 			}
 			else {
