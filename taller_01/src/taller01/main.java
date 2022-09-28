@@ -1,7 +1,6 @@
 package taller01;
 
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
 
 public class main {
@@ -11,19 +10,27 @@ public class main {
 		String[][] extraterrestres = new String[100][8];
 		String[][] humanos = new String[100][9];
 		
-		int cantExt = leerArchivoExt(extraterrestres);
-		int cantHum = leerArchivoHum(humanos);
+		leerArchivoExt(extraterrestres);
+		leerArchivoHum(humanos);
 		
-		traducirExt(extraterrestres, cantExt);
-		traducirHum(humanos, cantHum);
+		traducirExt(extraterrestres);
+		traducirHum(humanos);
 		
-		Menu(humanos, extraterrestres, cantHum, cantExt);
+		int op = Menu(humanos, extraterrestres);
 		
-		//Verificar si la edad de los extraterrestres, altura y peso se guardan en metros y kgs
-		//Verificar si la id es con random o ingresa desde pantalla, además de cómo se modifica (random o manual)
+		if(op==12) {
+			System.out.println(" -- SISTEMA CERRADO -- ");
+			guardarDatos(extraterrestres,humanos);
+		}
+		
 	}
 
-	public static int leerArchivoExt(String[][] ext) throws IOException{
+	/***
+	 * Reads and saves the information inside "x.txt".
+	 * @param ext
+	 * @throws IOException
+	 */
+	public static void leerArchivoExt(String[][] ext) throws IOException{
 		BufferedReader arch = new BufferedReader(new FileReader("x.txt"));
 		String linea;
 		int i=0;
@@ -40,10 +47,13 @@ public class main {
 			i++;
 		}
 		arch.close();
-		return i;
 	}
-	
-	public static int leerArchivoHum(String[][] hum) throws IOException{
+	/***
+	 * Reads and saves the information inside "h.txt".
+	 * @param hum
+	 * @throws IOException
+	 */
+	public static void leerArchivoHum(String[][] hum) throws IOException{
 		BufferedReader arch = new BufferedReader(new FileReader("h.txt"));
 		String linea;
 		int i=0;
@@ -61,10 +71,13 @@ public class main {
 			i++;
 		}
 		arch.close();
-		return i;
 	}
-	
-	public static void traducirExt(String[][] ext, int cantExt) {
+	/***
+	 * Translates the aliens information, converts the age to human age and converts the weight and height of humans to kilograms and meters respectively.
+	 * @param ext
+	 */
+	public static void traducirExt(String[][] ext) {
+		int cantExt = getCantExt(ext);
 		for(int i=0; i<cantExt; i++) {
 			ext[i][0] = traducir(ext[i][0]);
 			ext[i][1] = traducir(ext[i][1]);
@@ -75,19 +88,27 @@ public class main {
 			ext[i][6] = datos[2];
 		}
 	}
-	
-	public static void traducirHum(String[][] hum, int cantHum) {
+	/***
+	 * Converts the weight and height of humans to kilograms and meters respectively.
+	 * @param hum
+	 */
+	public static void traducirHum(String[][] hum) {
+		int cantHum = getCantHum(hum);
 		for(int i=0; i<cantHum; i++) {
 			String[] datos = convertirDatos(Double.parseDouble(hum[i][5]), Double.parseDouble(hum[i][6]), Double.parseDouble(hum[i][7]), 2);
 			hum[i][6] = datos[0];
 			hum[i][7] = datos[1];
 		}
 	}
-	
+	/***
+	 * Translates every single letter to human language.
+	 * @param dato
+	 * @return
+	 */
 	public static String traducir(String dato) {
 		String aux = "";
 		for(int j=0; j<dato.length(); j++) {
-			String palabra = dato.toUpperCase();
+			String palabra = dato;
 			char[] chars = new char[palabra.length()];
 			switch(palabra.charAt(j)) {
 				case 'A':
@@ -102,6 +123,18 @@ public class main {
 				case 'O':
 					chars[j] = 'I';
 					break;
+				case 'a':
+					chars[j] = 'e';
+					break;
+				case 'e':
+					chars[j] = 'a';
+					break;
+				case 'i':
+					chars[j] = 'o';
+					break;
+				case 'o':
+					chars[j] = 'i';
+					break;
 				default:
 					chars[j] = palabra.charAt(j);
 			}
@@ -109,7 +142,14 @@ public class main {
 		}
 		return aux;
 	}
-	
+	/***
+	 * Converts the entered parameters into kilograms, meters and human age, depending on the entered option.
+	 * @param edad
+	 * @param altura
+	 * @param peso
+	 * @param op
+	 * @return
+	 */
 	public static String[] convertirDatos(double edad, double altura, double peso, int op) {
 		String[] datos = new String[3];
 		if(op==1) {
@@ -119,25 +159,34 @@ public class main {
 		}else if(op==2) {
 			datos[0] = Double.toString(altura/100);
 			datos[1] = Double.toString(peso/1000);
+		}else if(op==3) {
+			datos[0] = Double.toString(edad*2);
+			datos[1] = Double.toString(altura*100);
+			datos[2] = Double.toString(peso*1000);
+		}else if(op==4) {
+			datos[0] = Double.toString(altura*100);
+			datos[1] = Double.toString(peso*1000);
 		}
 		return datos;
 	}
 	
-	//1 
+	/***
+	 * Creates a new alien.
+	 * @param ext
+	 * @param cantExt
+	 */
 	public static void ingresarExt(String[][] ext, int cantExt) {
-		cantExt = getCantExt(ext);
 		System.out.println("-- INGRESAR EXTRATERRESTRE --");
 		Scanner leerExt = new Scanner(System.in);
 		System.out.print("- Ingrese especie: ");
 		String especie = leerExt.nextLine();
 		System.out.print("- Ingrese nombre: ");
 		String nombre = leerExt.nextLine();
-		Random ran = new Random();
-		int id = ran.nextInt(10000000)+99999999;
+		int id = (int) (Math.random() * ((99999999 + 1) - 10000000)) + 10000000;
 		int i=0;
 		while(i<cantExt) {
 			if(ext[i][2].equals(Integer.toString(id))) {
-				id = ran.nextInt(10000000)+99999999;
+				id = (int) (Math.random() * ((99999999 + 1) - 10000000)) + 10000000;
 				i = 0;
 			}
 			i++;
@@ -170,16 +219,23 @@ public class main {
 		cantExt++;
 		System.out.println("-----------------------------------------");
 	}
-	
+	/***
+	 * Shows all the current aliens in the database.
+	 * @param ext
+	 * @param cantExt
+	 */
 	public static void desplegarExt(String[][] ext, int cantExt) {
-		cantExt = getCantExt(ext);
 		for(int i=0; i<ext.length; i++) {
 			if(ext[i][0]!=null) {
 				System.out.println("Extraterrestre "+(i+1)+": "+"[Especie: "+ext[i][0]+", Nombre: "+ext[i][1]+", Identificación universal: "+ext[i][2]+", Planeta de origen: "+ext[i][3]+", Edad: "+ext[i][4]+", Altura: "+ext[i][5]+", Peso: "+ext[i][6]+", Tipo: "+ext[i][7]+"]");
 			}
 		}
 	}
-	
+	/***
+	 * Shows all the current humans in the database.
+	 * @param hum
+	 * @param cantHum
+	 */
 	public static void desplegarHum(String[][] hum, int cantHum) {
 		for(int i=0; i<hum.length; i++) {
 			if(hum[i][0]!=null) {
@@ -188,11 +244,14 @@ public class main {
 		}
 	}
 	
-	//2
+	/***
+	 * Modifies any parameter of a certain alien.
+	 * @param ext
+	 * @param cantExt
+	 */
 	public static void modificarExt(String[][] ext, int cantExt) {
-		cantExt = getCantExt(ext);
 		System.out.println("-- MODIFICAR EXTRATERRESTRE --");
-		desplegarExt(ext, cantExt);
+		desplegarExt(ext,cantExt);
 		Scanner leerExt1 = new Scanner(System.in);
 		System.out.print("- Ingrese número de extraterrestre a modificar: ");
 		int num = Integer.parseInt(leerExt1.nextLine());
@@ -211,34 +270,34 @@ public class main {
 			switch(op) {
 				case 1:
 					System.out.print("- Ingrese especie: ");
-					ext[num][0] = traducir(leerExt1.nextLine());
+					ext[num-1][0] = traducir(leerExt1.nextLine());
 					break;
 				case 2:
 					System.out.print("- Ingrese nombre: ");
-					ext[num][1] = traducir(leerExt1.nextLine());
+					ext[num-1][1] = traducir(leerExt1.nextLine());
 					break;
 				case 3:
 					System.out.print("- Ingrese identificación: ");
-					ext[num][2] = leerExt1.nextLine();
+					ext[num-1][2] = leerExt1.nextLine();
 					break;
 				case 4:
 					System.out.print("- Ingrese planeta: ");
-					ext[num][3] = traducir(leerExt1.nextLine());
+					ext[num-1][3] = traducir(leerExt1.nextLine());
 					break;
 				case 5:
 					System.out.print("- Ingrese edad: ");
-					int edad = Integer.parseInt(leerExt1.nextLine());
-					ext[num][4] = Double.toString(edad/2);
+					double edad = Integer.parseInt(leerExt1.nextLine());
+					ext[num-1][4] = Double.toString(edad/2);
 					break;
 				case 6:
 					System.out.print("- Ingrese altura (en centímetros): ");
-					int altura = Integer.parseInt(leerExt1.nextLine());
-					ext[num][5] = Double.toString(altura/100);
+					double altura = Integer.parseInt(leerExt1.nextLine());
+					ext[num-1][5] = Double.toString(altura/100);
 					break;
 				case 7:
 					System.out.print("- Ingrese peso (en gramos): ");
-					int peso = Integer.parseInt(leerExt1.nextLine());
-					ext[num][6] = Double.toString(peso/1000);
+					double peso = Integer.parseInt(leerExt1.nextLine());
+					ext[num-1][6] = Double.toString(peso/1000);
 					break;
 				case 8:
 					System.out.print("- Ingrese tipo (Invertebrado: I, Vertebrado: V, Flexible: F): ");
@@ -247,28 +306,31 @@ public class main {
 						System.out.print("Tipo ingresado no es válido. Ingrese nuevamente: ");
 						tipo = leerExt1.nextLine().toUpperCase();
 					}
-					ext[num][7] = tipo;
+					ext[num-1][7] = tipo;
 					break;
 			}
 		}
 		System.out.println("Datos guardados exitosamente.");
 		System.out.println("-----------------------------------------");
 	}
-	
-	//3
+	/***
+	 * Creates a new human.
+	 * @param hum
+	 * @param cantHum
+	 */
 	public static void ingresarHum(String[][] hum, int cantHum) {
+		cantHum = getCantHum(hum);
 		System.out.println("-- INGRESAR HUMANO --");
 		Scanner leerHum = new Scanner(System.in);
 		System.out.print("- Ingrese nacionalidad: ");
 		String nacion = leerHum.nextLine();
 		System.out.print("- Ingrese nombre: ");
 		String nombre = leerHum.nextLine();
-		Random ran = new Random();
-		int id = ran.nextInt(10000000)+99999999;
+		int id = (int) (Math.random() * ((99999999 + 1) - 10000000)) + 10000000;
 		int i=0;
 		while(i<cantHum) {
 			if(hum[i][2].equals(Integer.toString(id))) {
-				id = ran.nextInt(10000000)+99999999;
+				id = (int) (Math.random() * ((99999999 + 1) - 10000000)) + 10000000;
 				i = 0;
 			}
 			i++;
@@ -295,15 +357,81 @@ public class main {
 		hum[cantHum][6] = datos[0];
 		hum[cantHum][7] = datos[1];
 		hum[cantHum][8] = trabajo;
-		cantHum++;
 		System.out.println("Humano ingresado exitosamente.");
 		System.out.println("-----------------------------------------");
 	}
-	
-	//4
-	//Falta modificar humano
-	
-	//5
+	/***
+	 * Modifies any parameter of a certain human.
+	 * @param hum
+	 * @param cantHum
+	 */
+	public static void modificarHum(String[][] hum, int cantHum) {
+		System.out.println("-- MODIFICAR EXTRATERRESTRE --");
+		desplegarHum(hum,cantHum);
+		Scanner leerExt1 = new Scanner(System.in);
+		System.out.print("- Ingrese número de humano a modificar: ");
+		int num = Integer.parseInt(leerExt1.nextLine());
+		while(num<1 || num>cantHum) {
+			System.out.print("Número de humano no válido. Ingrese nuevamente: ");
+			num = Integer.parseInt(leerExt1.nextLine());
+		}
+		int op = 0;
+		while(op!=10) {
+			System.out.print("¿Qué dato desea modificar?\n1) Nacionalidad\n2) Nombre\n3) Identificación\n4) Región\n5) Ciudad\n6) Edad\n7) Altura\n8) Peso\n9) Planetas de trabajo\n10) Guardar y salir\nSu opción: ");
+			op = Integer.parseInt(leerExt1.nextLine());
+			while(op<1 || op>10) {
+				System.out.print("Opción no válida. Ingrese nuevamente: ");
+				op = Integer.parseInt(leerExt1.nextLine());
+			}
+			switch(op) {
+				case 1:
+					System.out.print("- Ingrese nacionalidad: ");
+					hum[num-1][0] = leerExt1.nextLine();
+					break;
+				case 2:
+					System.out.print("- Ingrese nombre: ");
+					hum[num-1][1] = leerExt1.nextLine();
+					break;
+				case 3:
+					System.out.print("- Ingrese identificación: ");
+					hum[num-1][2] = leerExt1.nextLine();
+					break;
+				case 4:
+					System.out.print("- Ingrese región: ");
+					hum[num-1][3] = leerExt1.nextLine();
+					break;
+				case 5:
+					System.out.print("- Ingrese ciudad: ");
+					hum[num-1][4] = leerExt1.nextLine();
+					break;
+				case 6:
+					System.out.print("- Ingrese edad: ");
+					hum[num-1][5] = leerExt1.nextLine();
+					break;
+				case 7:
+					System.out.print("- Ingrese altura (en centímetros): ");
+					double altura = Double.parseDouble(leerExt1.nextLine());
+					hum[num-1][6] = Double.toString(altura/100);
+					break;
+				case 8:
+					System.out.print("- Ingrese peso (en gramos): ");
+					double peso = Double.parseDouble(leerExt1.nextLine());
+					hum[num-1][7] = Double.toString(peso/1000);
+					break;
+				case 9:
+					System.out.print("- Ingrese planetas de trabajo (formato PLANETA1/PLANETA2/ETC): ");
+					hum[num-1][8] = leerExt1.nextLine().toUpperCase();
+					break;
+			}
+		}
+		System.out.println("Datos guardados exitosamente.");
+		System.out.println("-----------------------------------------");
+	}
+	/***
+	 * Finds and shows all the current humans in the database who matches the entered nationality.
+	 * @param hum
+	 * @param cantHum
+	 */
 	public static void desplegarNacionalidad(String[][] hum, int cantHum) {
 		System.out.println("-- MOSTRAR POR NACIONALIDAD --");
 		Scanner leerNac = new Scanner(System.in);
@@ -320,10 +448,12 @@ public class main {
 		}
 		System.out.println("-----------------------------------------");
 	}
-	
-	//6
+	/***
+	 * Eliminates a certain alien from the database.
+	 * @param ext
+	 * @param cantExt
+	 */
 	public static void eliminarExt(String[][] ext, int cantExt) {
-		cantExt = getCantExt(ext);
 		System.out.println("-- ELIMINAR EXTRATERRESTRE --");
 		Scanner deleteExt = new Scanner(System.in);
 		System.out.print("- Ingrese número de identificación universal: ");
@@ -341,12 +471,14 @@ public class main {
 				ext[j] = ext[j+1];
 			}
 			System.out.println("Extraterrestre eliminado exitosamente.");
-			cantExt--;
 		}
 		System.out.println("-----------------------------------------");
 	}
-	
-	//7
+	/***
+	 * Eliminates a certain human from the database.
+	 * @param hum
+	 * @param cantHum
+	 */
 	public static void eliminarHum(String[][] hum, int cantHum) {
 		System.out.println("-- ELIMINAR HUMANO --");
 		Scanner deleteHum = new Scanner(System.in);
@@ -366,13 +498,14 @@ public class main {
 				hum[j] = hum[j+1];
 			}
 			System.out.println("Humano eliminado exitosamente.");
-			cantHum--;
-			System.out.println(cantHum);
 		}
 		System.out.println("-----------------------------------------");
 	}
-	
-	//8
+	/***
+	 * Look an alien who match the entered identification.
+	 * @param ext
+	 * @param cantExt
+	 */
 	public static void buscarExt(String[][] ext, int cantExt) {
 		cantExt = getCantExt(ext);
 		System.out.println("-- BUSCAR POR IDENTIFICACIÓN UNIVERSAL --");
@@ -392,8 +525,12 @@ public class main {
 		}
 		System.out.println("-----------------------------------------");
 	}
-	
-	//9
+	/***
+	 * Finds and shows all the current humans in the database who works in the entered planet and the aliens who lives there.
+	 * @param ext
+	 * @param hum
+	 * @param cantExt
+	 */
 	public static void mostrarPlaneta(String [][] ext, String [][] hum, int cantExt) {
 		cantExt = getCantExt(ext);
 		System.out.println("-- MOSTRAR POR PLANETA --");
@@ -413,7 +550,12 @@ public class main {
 		
 		System.out.println("-------------------------------");
 	}
-	
+	/***
+	 * Looks for all the current aliens in the database who lives in the entered planet.
+	 * @param planeta
+	 * @param ext
+	 * @return
+	 */
 	public static int extraterrestresPorPlaneta(String planeta,String [][] ext) {
 		planeta = planeta.toUpperCase();
 		System.out.println("-------------------------------");
@@ -431,7 +573,12 @@ public class main {
 		System.out.println("-------------------------------");
 		return cont;
 	}
-	
+	/***
+	 * Searchs all the current humans of the database who works in the entered planet.
+	 * @param planeta
+	 * @param hum
+	 * @return
+	 */
 	public static int humanosTrabajadoresEnPlaneta(String planeta, String [][] hum) {
 		int cont = 0;
 		String [] planetas;
@@ -449,8 +596,11 @@ public class main {
 		}
 		return cont;
 	}
-
-	//10
+	/***
+	 * Finds and shows all the humans who matches with the entered nationality and the percentage with respect to all the humans in the database.
+	 * @param hum
+	 * @param cantHum
+	 */
 	public static void desplegarPorNacionalidad(String[][] hum, int cantHum) {
 		System.out.println("-- MOSTRAR POR NACIONALIDAD --");
 		Scanner leerNacion = new Scanner(System.in);
@@ -471,9 +621,13 @@ public class main {
 		}
 		System.out.println("-----------------------------------------");
 	}
-	
+	/***
+	 * Counts how many aliens in the database are according to their type.
+	 * @param ext
+	 * @param cantExt
+	 * @param cant
+	 */
 	public static void contarTipos(String[][] ext, int cantExt, int[] cant) {
-		cantExt = getCantExt(ext);
 		for(int i=0; i<cantExt; i++) {
 			switch(ext[i][7]) {
 				case "I":
@@ -488,10 +642,12 @@ public class main {
 			}
 		}
 	}
-	
-	//11
+	/***
+	 * Shows the count of the aliens according to their type.
+	 * @param ext
+	 * @param cantExt
+	 */
 	public static void desplegarTipoExt(String[][] ext, int cantExt) {
-		cantExt = getCantExt(ext);
 		System.out.println("-- MOSTRAR EXTRATERRESTRES SEGÚN TIPO --");
 		int[] cantTipos = new int[3];
 		contarTipos(ext, cantExt, cantTipos);
@@ -553,12 +709,49 @@ public class main {
 		System.out.println("  —————————————————");
 		System.out.println("-----------------------------------------");
 	}
-	
-	public static void Menu(String[][] hum, String[][] ext, int cantHum, int cantExt) {
-		cantExt = getCantExt(ext);
+	/***
+	 * Saves all the new information into their corresponding files.
+	 * @param ext
+	 * @param hum
+	 * @throws IOException
+	 */
+	public static void guardarDatos(String[][] ext, String[][] hum) throws IOException{
+		BufferedWriter archX = new BufferedWriter(new FileWriter("x.txt"));
+		int cantExt = getCantExt(ext);
+		for(int i=0; i<cantExt; i++) {
+			String[] datos = convertirDatos(Double.parseDouble(ext[i][4]),Double.parseDouble(ext[i][5]),Double.parseDouble(ext[i][6]),3);
+			String linea = traducir(ext[i][0])+","+traducir(ext[i][1])+","+ext[i][2]+","+traducir(ext[i][3])+","+(int)Double.parseDouble(datos[0])+","+(int)Double.parseDouble(datos[1])+","+(int)Double.parseDouble(datos[2])+","+ext[i][7];
+			if(i!=cantExt-1) {
+				linea += "\n";
+			}
+			archX.write(linea);
+		}
+		archX.close();
+		
+		BufferedWriter archH = new BufferedWriter(new FileWriter("h.txt"));
+		int cantHum = getCantExt(hum);
+		for(int i=0; i<cantHum; i++) {
+			String[] datos = convertirDatos(Double.parseDouble(hum[i][5]),Double.parseDouble(hum[i][6]),Double.parseDouble(hum[i][7]),4);
+			String linea = hum[i][0]+","+hum[i][1]+","+hum[i][2]+","+hum[i][3]+","+hum[i][4]+","+hum[i][5]+","+(int)Double.parseDouble(datos[0])+","+(int)Double.parseDouble(datos[1])+","+hum[i][8];
+			if(i!=cantHum-1) {
+				linea += "\n";
+			}
+			archH.write(linea);
+		}
+		archH.close();
+	}
+	/***
+	 * Executes the main menu.
+	 * @param hum
+	 * @param ext
+	 * @return
+	 */
+	public static int Menu(String[][] hum, String[][] ext) {
 		int op = 0;
 		while(op!=12) {
 			System.out.println("*********** MENÚ ***********");
+			int cantExt = getCantExt(ext);
+			int cantHum = getCantHum(hum);
 			Scanner leer = new Scanner(System.in);
 			System.out.println("1) Ingresar extraterrestre\n2) Modificar un extraterrestre\n3) Ingresar humano\n4) Modificar un humano\n5) Mostrar por nacionalidad\n6) Eliminar extraterrestre\n7) Eliminar humano\n8) Buscar por identificación universal\n9) Mostrar por planeta\n10) Mostrar por nacionalidad y porcentaje\n11) Mostrar cantidad de extraterrestres según tipo\n12) Salir");
 			System.out.print("Su opción: ");
@@ -581,7 +774,7 @@ public class main {
 					ingresarHum(hum, cantHum);
 					break;
 				case 4:
-					desplegarHum(hum, cantHum);
+					modificarHum(hum, cantHum);
 					break;
 				case 5:
 					desplegarNacionalidad(hum, cantHum);
@@ -606,10 +799,14 @@ public class main {
 					break;
 			}
 		}
+		return op;
 	}
 	
 	//Extra
-	
+	/***
+	 * Prints a certain array.
+	 * @param matriz
+	 */
 	public static void printMatriz(String [][] matriz) {
 
 		for(int f = 0 ; f < matriz.length ; f++) {
@@ -624,7 +821,11 @@ public class main {
 			}
 		}
 	}
-	
+	/***
+	 * Prints the rows of a certain array.
+	 * @param matriz
+	 * @param fila
+	 */
 	public static void printFila(String[][] matriz, int fila) {
 		
 		for(int i = 0; i < matriz[0].length ; i++) {
@@ -633,11 +834,32 @@ public class main {
 		System.out.println("\n");
 		
 	}
-	
+	/***
+	 * Counts all the current aliens in the database.
+	 * @param ext
+	 * @return
+	 */
 	public static int getCantExt(String [][] ext) {
 		int cont = 0;
 		for(int fila = 0 ; fila < ext.length ; fila++) {
 			if(ext[fila][0] != null) {	
+				cont++;
+			}
+			else {
+				break;
+			}
+		}
+		return cont;
+	}
+	/***
+	 * Counts all the current humasn in the database.
+	 * @param hum
+	 * @return
+	 */
+	public static int getCantHum(String [][] hum) {
+		int cont = 0;
+		for(int fila = 0 ; fila < hum.length ; fila++) {
+			if(hum[fila][0] != null) {	
 				cont++;
 			}
 			else {
