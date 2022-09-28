@@ -515,7 +515,7 @@ public class main {
 		System.out.println("-----------------------------------------");
 	}
 	/***
-	 * Look an alien who match the entered identification.
+	 * Looks for an alien who match the entered identification.
 	 * @param ext
 	 * @param cantExt
 	 */
@@ -586,7 +586,7 @@ public class main {
 		return cont;
 	}
 	/***
-	 * Searchs all the current humans of the database who works in the entered planet.
+	 * Looks for all the current humans of the database who works in the entered planet.
 	 * @param planeta
 	 * @param hum
 	 * @return
@@ -850,7 +850,7 @@ public class main {
 	/***
 	 * Counts all the current aliens in the database.
 	 * @param ext
-	 * @return
+	 * @return the number of aliens
 	 */
 	public static int getCantExt(String [][] ext) {
 		int cont = 0;
@@ -865,9 +865,9 @@ public class main {
 		return cont;
 	}
 	/***
-	 * Counts all the current humasn in the database.
+	 * Counts all the current humans in the database.
 	 * @param hum
-	 * @return
+	 * @return the number of humans
 	 */
 	public static int getCantHum(String [][] hum) {
 		int cont = 0;
