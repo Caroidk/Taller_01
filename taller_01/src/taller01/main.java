@@ -757,7 +757,7 @@ public class main {
 	 * Executes the main menu.
 	 * @param hum
 	 * @param ext
-	 * @return
+	 * @return the entered option
 	 */
 	public static int Menu(String[][] hum, String[][] ext){
 		int op = 0;
