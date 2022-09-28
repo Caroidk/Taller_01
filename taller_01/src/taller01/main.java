@@ -123,7 +123,7 @@ public class main {
 		return datos;
 	}
 	
-	//1 ARREGLAR, NO GUARDA
+	//1 
 	public static void ingresarExt(String[][] ext, int cantExt) {
 		System.out.println("-- INGRESAR EXTRATERRESTRE --");
 		Scanner leerExt = new Scanner(System.in);
@@ -144,18 +144,18 @@ public class main {
 		System.out.print("- Ingrese planeta de origen: ");
 		String planeta = leerExt.nextLine();
 		System.out.print("- Ingrese edad: ");
-		int edad = Integer.parseInt(leerExt.nextLine());
+		String edad = leerExt.nextLine();
 		System.out.print("- Ingrese altura (en centímetros): ");
-		int altura = Integer.parseInt(leerExt.nextLine());
+		String altura = leerExt.nextLine();
 		System.out.print("- Ingrese peso (en gramos): ");
-		int peso = Integer.parseInt(leerExt.nextLine());
+		String peso = leerExt.nextLine();
 		System.out.print("- Ingrese tipo de estraterrestre (Invertebrado: I, Vertebrado: V, Flexible: F): ");
 		String tipo = leerExt.nextLine().toUpperCase();
 		while(!tipo.equals("V") && !tipo.equals("I") && !tipo.equals("F")) {
 			System.out.print("Tipo ingresado no es válido. Ingrese nuevamente: ");
 			tipo = leerExt.nextLine().toUpperCase();
 		}
-		String[] datos = convertirDatos(edad, altura, peso, 1);
+		String[] datos = convertirDatos(Double.parseDouble(edad), Double.parseDouble(altura), Double.parseDouble(peso), 1);
 		ext[cantExt][0] = traducir(especie);
 		ext[cantExt][1] = traducir(nombre);
 		ext[cantExt][2] = Integer.toString(id);
@@ -252,7 +252,7 @@ public class main {
 		System.out.println("-----------------------------------------");
 	}
 	
-	//3 ARREGLAR, NO GUARDA
+	//3
 	public static void ingresarHum(String[][] hum, int cantHum) {
 		System.out.println("-- INGRESAR HUMANO --");
 		Scanner leerHum = new Scanner(System.in);
@@ -275,20 +275,20 @@ public class main {
 		System.out.print("- Ingrese ciudad: ");
 		String ciudad = leerHum.nextLine();
 		System.out.print("- Ingrese edad: ");
-		int edad = Integer.parseInt(leerHum.nextLine());
+		String edad = leerHum.nextLine();
 		System.out.print("- Ingrese altura: ");
-		int altura = Integer.parseInt(leerHum.nextLine());
+		String altura = leerHum.nextLine();
 		System.out.print("- Ingrese peso: ");
-		int peso = Integer.parseInt(leerHum.nextLine());
+		String peso = leerHum.nextLine();
 		System.out.print("- Ingrese planetas de trabajo (formato PLANETA1/PLANETA2/ETC): ");
 		String trabajo = leerHum.nextLine().toUpperCase();
-		String[] datos = convertirDatos(edad, altura, peso, 2);
+		String[] datos = convertirDatos(Double.parseDouble(edad), Double.parseDouble(altura), Double.parseDouble(peso), 2);
 		hum[cantHum][0] = nacion;
 		hum[cantHum][1] = nombre;
 		hum[cantHum][2] = Integer.toString(id);
 		hum[cantHum][3] = region;
 		hum[cantHum][4] = ciudad;
-		hum[cantHum][5] = Integer.toString(edad);
+		hum[cantHum][5] = String.valueOf(edad);
 		hum[cantHum][6] = datos[0];
 		hum[cantHum][7] = datos[1];
 		hum[cantHum][8] = trabajo;
@@ -389,8 +389,61 @@ public class main {
 	}
 	
 	//9
-	//Falta mostrar por planeta
+	public static void mostrarPlaneta(String [][] ext, String [][] hum, int cantExt) {
+		System.out.println("-- MOSTRAR POR PLANETA --");
+		Scanner scan = new Scanner(System.in);
+		System.out.println("-Ingrese nombre del planeta a consultar: ");
+		String planeta = scan.nextLine().toUpperCase();
+		printMatriz(ext);
+		
+		double cantExtPorPlaneta = extraterrestresPorPlaneta(planeta, ext);
+		
+		double porcentaje = (cantExtPorPlaneta/cantExt) * 100;
+		
+		System.out.println("-Porcentaje de Extraterrestres en " + planeta.toUpperCase() +": " + porcentaje +" %");
+		System.out.println("-------------------------------");
+		
+		System.out.println("-Humanos que trabajan en el planeta " + planeta.toUpperCase() + ": " + humanosTrabajadoresEnPlaneta(planeta, hum));
+		
+		System.out.println("-------------------------------");
+	}
 	
+	public static int extraterrestresPorPlaneta(String planeta,String [][] ext) {
+		planeta = planeta.toUpperCase();
+		System.out.println("-------------------------------");
+		System.out.println("Extraterrestres del planeta: ");
+		int cont = 0;
+		for(int fila = 0 ; fila < ext.length ; fila++) {
+			if(ext[fila][0] != null) {
+				
+				if(planeta.equals(ext[fila][3])) {
+					printFila(ext,fila);
+					cont++;
+				}
+			}
+		}
+		System.out.println("-------------------------------");
+		return cont;
+	}
+	
+	public static int humanosTrabajadoresEnPlaneta(String planeta, String [][] hum) {
+		int cont = 0;
+		String [] planetas;
+		for(int fila = 0; fila < hum.length ; fila++) {
+			if(hum[fila][0] != null) {
+				planetas = hum[fila][8].split("/");
+				for(int i = 0 ; i < planetas.length ; i++ )
+					if(planeta.toUpperCase().equals(planetas[i])) {
+						cont++;
+					}
+			}
+			else {
+				break;
+			}
+		}
+		return cont;
+	}
+
 	//10
 	public static void desplegarPorNacionalidad(String[][] hum, int cantHum) {
 		System.out.println("-- MOSTRAR POR NACIONALIDAD --");
@@ -534,6 +587,7 @@ public class main {
 					buscarExt(ext, cantExt);
 					break;
 				case 9:
+					mostrarPlaneta(ext,hum,cantExt);
 					break;
 				case 10:
 					desplegarPorNacionalidad(hum, cantHum);
@@ -545,4 +599,42 @@ public class main {
 		}
 	}
 	
+	//Extra
+	
+	public static void printMatriz(String [][] matriz) {
+
+		for(int f = 0 ; f < matriz.length ; f++) {
+			if(matriz[f][0] != null) {
+				for(int i = 0; i < matriz[0].length ; i++) {
+					System.out.print("["+matriz[f][i]+"] ");
+				}
+				System.out.println("\n");
+			}
+			else {
+				break;
+			}
+		}
+	}
+	
+	public static void printFila(String[][] matriz, int fila) {
+		
+		for(int i = 0; i < matriz[0].length ; i++) {
+			System.out.print("["+matriz[fila][i]+"] ");
+		}
+		System.out.println("\n");
+		
+	}
+	
+	public static int getCantExt(String [][] ext) {
+		int cont = 0;
+		for(int fila = 0 ; fila < ext.length ; fila++) {
+			if(ext[fila][0] != null) {	
+				cont++;
+			}
+			else {
+				break;
+			}
+		}
+		return cont;
+	}
 }
