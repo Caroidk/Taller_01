@@ -337,11 +337,11 @@ public class main {
 		String nacion = leerHum.nextLine();
 		System.out.print("- Ingrese nombre: ");
 		String nombre = leerHum.nextLine();
-		int id = (int) (Math.random() * ((99999999 + 1) - 10000000)) + 10000000;
+		int id = (int) (Math.random() * ((9999999 + 1) - 1000000)) + 1000000;
 		int i=0;
 		while(i<cantHum) {
 			if(hum[i][2].equals(Integer.toString(id))) {
-				id = (int) (Math.random() * ((99999999 + 1) - 10000000)) + 10000000;
+				id = (int) (Math.random() * ((9999999 + 1) - 1000000)) + 1000000;
 				i = 0;
 			}
 			i++;
